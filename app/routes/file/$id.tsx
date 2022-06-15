@@ -1,9 +1,9 @@
-import { json, LoaderFunction } from '@remix-run/node'
+import type { LoaderFunction } from '@remix-run/node'
 import { openCollection } from '../../sonar.server'
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   const id = params.id
-  if (typeof id !== 'string') return json({ error: { file: 'cant load file' } })
+  if (typeof id !== 'string') return
   const collection = await openCollection()
   const requestHeaders = Object.fromEntries(request.headers.entries())
   const url = new URL(request.url)
