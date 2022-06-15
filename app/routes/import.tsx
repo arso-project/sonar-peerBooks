@@ -14,26 +14,22 @@ import { PassThrough } from 'stream'
 import { writeAsyncIterableToWritable } from '@remix-run/node'
 
 interface uploadFileToSonarProps {
-  name: string | undefined
   contentType: string
   data: AsyncIterable<Uint8Array>
   filename: string | undefined
 }
 
 async function uploadFileToSonar({
-  name,
   contentType,
   data,
   filename,
 }: uploadFileToSonarProps) {
   const collection = await openCollection()
   let fileRecord
-  console.log(data)
   try {
     fileRecord = await collection.files.createFile(data, {
       filename,
-      contentType,
-      name,
+      contentType
     })
   } catch (err: any) {
     console.log(err)
@@ -48,7 +44,7 @@ export const action: ActionFunction = async ({ request }) => {
       if (name !== 'file') return null
       const uploadStream = new PassThrough()
       const [fileId] = await Promise.all([
-        uploadFileToSonar({ data: uploadStream, name, contentType, filename }),
+        uploadFileToSonar({ data: uploadStream, contentType, filename }),
         writeAsyncIterableToWritable(data, uploadStream),
       ])
 

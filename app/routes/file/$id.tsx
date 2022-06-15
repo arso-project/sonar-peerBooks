@@ -8,12 +8,18 @@ export let loader: LoaderFunction = async ({ request, params }) => {
   const requestHeaders = Object.fromEntries(request.headers.entries())
   const url = new URL(request.url)
   const query = url.search
+  const meta = await collection.files.getFileMetadata(id)
   const res = await collection.files.readFile(id, {
     responseType: 'raw',
     headers: requestHeaders,
-    query: query,
+    query,
   })
-  console.log(res)
+  if (meta.value.filename) {
+    res.headers.append('Content-Disposition', `attachment; filename="${meta.value.filename}"`)
+  }
+  if (meta.value.contentType) {
+    res.headers.set('content-type', meta.value.contentType)
+  }
   return new Response(res.body, {
     status: res.status,
     // TODO: Change to public entries() API once sonar client moves to WebApi fetch
