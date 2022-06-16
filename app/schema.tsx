@@ -1,4 +1,4 @@
-import type { TypeSpecInput } from '@arsonar/client'
+import { TypeSpecInput } from '@arsonar/client'
 
 type Spec = {
   defaultNamespace: string
@@ -51,9 +51,6 @@ export const schema: Spec = {
         },
         coverImageUrl: {
           type: 'string',
-        },
-        metadata: {
-          type: 'object',
         },
       },
     },

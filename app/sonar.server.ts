@@ -81,3 +81,27 @@ export async function createBookRecord({
   })
   return record
 }
+
+interface uploadFileToSonarProps {
+  contentType: string
+  data: AsyncIterable<Uint8Array>
+  filename: string | undefined
+}
+
+export async function uploadFileToSonar({
+  contentType,
+  data,
+  filename,
+}: uploadFileToSonarProps) {
+  const collection = await openCollection()
+  let fileRecord
+  try {
+    fileRecord = await collection.files.createFile(data, {
+      filename,
+      contentType,
+    })
+  } catch (err: any) {
+    return { error: err }
+  }
+  return fileRecord.id
+}
