@@ -10,16 +10,16 @@ import { Form } from '@remix-run/react'
 import { openCollection, createBookRecord } from '../sonar.server'
 import fetchOpenLibraryData from '../lib/openLibrary'
 import { isbn as checkISBN } from 'simple-isbn'
+import { PassThrough } from 'stream'
+import { writeAsyncIterableToWritable } from '@remix-run/node'
 
 interface uploadFileToSonarProps {
-  name: string | undefined
   contentType: string
   data: AsyncIterable<Uint8Array>
   filename: string | undefined
 }
 
 async function uploadFileToSonar({
-  name,
   contentType,
   data,
   filename,
@@ -29,8 +29,7 @@ async function uploadFileToSonar({
   try {
     fileRecord = await collection.files.createFile(data, {
       filename,
-      contentType,
-      name,
+      contentType
     })
   } catch (err: any) {
     console.log(err)
@@ -43,7 +42,12 @@ export const action: ActionFunction = async ({ request }) => {
   const uploadHandler = unstable_composeUploadHandlers(
     async ({ name, contentType, data, filename }) => {
       if (name !== 'file') return null
-      const fileId = uploadFileToSonar({ name, contentType, filename, data })
+      const uploadStream = new PassThrough()
+      const [fileId] = await Promise.all([
+        uploadFileToSonar({ data: uploadStream, contentType, filename }),
+        writeAsyncIterableToWritable(data, uploadStream),
+      ])
+
       return fileId
     },
     unstable_createMemoryUploadHandler()
@@ -79,7 +83,7 @@ export const action: ActionFunction = async ({ request }) => {
 
   try {
     bookData = await fetchOpenLibraryData(isbn)
-    console.log('BOOKDATA: ', bookData)
+    // console.log('BOOKDATA: ', bookData)
   } catch (err) {
     return json({
       error: { openlib: err },

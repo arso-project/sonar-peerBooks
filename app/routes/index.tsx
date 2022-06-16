@@ -21,7 +21,7 @@ export const loader: LoaderFunction = async () => {
   const books = await collection.query('records', {
     type: 'sonar-peerBooks/Book',
   })
-  console.log('Books: ', books)
+  // console.log('Books: ', books)
 
   return json(books)
 }
