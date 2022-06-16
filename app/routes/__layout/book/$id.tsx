@@ -2,7 +2,7 @@ import type { LoaderFunction } from '@remix-run/node'
 import { useCatch, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
 import { useParams } from 'react-router-dom'
-import { openCollection } from '../../sonar.server'
+import { openCollection } from '../../../sonar.server'
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   const id = params.id

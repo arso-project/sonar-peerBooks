@@ -7,7 +7,6 @@ export function validateISBN(isbn: FormDataEntryValue | null) {
   } else if (!checkISBN.isValidIsbn(isbn)) {
     return { isbnErr: 'invalid isbn' }
   }
-  return { isbn }
 }
 
 export function validateFileId(fileId: FormDataEntryValue | null) {
@@ -15,5 +14,4 @@ export function validateFileId(fileId: FormDataEntryValue | null) {
   if (typeof fileId !== 'string') {
     return { fileIdErr: 'Something is going wrong with your upload' }
   }
-  return { fileId }
 }
