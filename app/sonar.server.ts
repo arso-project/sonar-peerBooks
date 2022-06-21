@@ -38,7 +38,6 @@ export async function openCollection(): Promise<Collection> {
     } catch (err: any) {
       collection = await workspace.createCollection(collectionName)
     }
-    console.log('opened collection', collection.key)
     await ensureSchema(collection)
   }
   return collection

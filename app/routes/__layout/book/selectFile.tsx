@@ -11,7 +11,7 @@ import {
 import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
 
 import { PassThrough } from 'stream'
-import { validateFileId } from '~/lib/validator'
+import { validateFileId } from '~/lib/utils'
 import { openCollection, uploadFileToSonar } from '../../../sonar.server'
 
 import type { Files } from '@arsonar/client'
@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (formErrors.fileId) return formErrors
 
   const fileId = formData.get('file') as string
-  return redirect(`/book/new?${fileId}`)
+  return redirect(`/book/addmetadata?${fileId}`)
 }
 
 export const loader: LoaderFunction = async () => {
@@ -49,11 +49,11 @@ export default function SelectFile() {
   const files = useLoaderData()
   return (
     <div>
-      {files.map((file: any) => {
+      {files.map((file: any, i: number) => {
         if (file.value.contentType === 'application/pdf') {
           return (
-            <div>
-              <a className='mr-2' href={'/book/new?fileId=' + file.id}>
+            <div key={i}>
+              <a className='mr-2' href={'/book/addmetadata?fileId=' + file.id}>
                 <div className='flex flex-row align-middle'>
                   <span className='mx-1 text-sm text-pink-600'>
                     {file.value.filename}
