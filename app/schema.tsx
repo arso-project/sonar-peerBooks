@@ -25,14 +25,29 @@ export const schema: Spec = {
         title: {
           type: 'string',
         },
-        isbn: {
+        subtitle: {
           type: 'string',
         },
-        identifiers: {
+        isbn_10: {
+          type: 'string',
+        },
+        isbn_13: {
+          type: 'string',
+        },
+        number_of_pages: {
+          type: 'string',
+        },
+        excerpt: {
+          type: 'string',
+        },
+        openlibraryId: {
           type: 'array',
         },
         publishers: {
           type: 'array',
+        },
+        publish_date: {
+          type: 'string',
         },
         openLibraryUrl: {
           type: 'string',
