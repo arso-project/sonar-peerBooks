@@ -4,6 +4,7 @@ import {
   useActionData,
   useLoaderData,
   useLocation,
+  useFetcher,
 } from '@remix-run/react'
 
 import { validateISBN } from '~/lib/utils'
@@ -29,7 +30,6 @@ export const action: ActionFunction = async ({ request }) => {
       error: { openlib: err },
     })
   }
-  console.log('OPENLIBDATA: ', openlibraryData)
   const bookData = openlibraryData
     ? {
         title: openlibraryData?.title || '',
@@ -66,14 +66,11 @@ export const action: ActionFunction = async ({ request }) => {
           openlibraryData?.cover?.medium || openlibraryData?.cover?.small || '',
       }
     : undefined
-
-  console.log('HELLOOOOOO: ', bookData)
-
   if (!bookData) return json('NO DATA')
   return json({ bookData })
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request, params }) => {
   const collection = await openCollection()
   const url = new URL(request.url)
   const fileId = url.searchParams.get('fileId')
@@ -158,10 +155,10 @@ interface FullFormProps {
   formErrors: FormErrors
 }
 function FullForm({ bookData, formErrors }: FullFormProps) {
-  const location = useLocation()
+  const fetcher = useFetcher()
   const fields = Object.keys(schema.types.Book.fields)
   return (
-    <Form action={`${location.pathname}${location.search}`} method='post'>
+    <fetcher.Form action='/book/create' method='post'>
       {fields.map((field, i) => {
         return (
           <FormField
@@ -175,6 +172,6 @@ function FullForm({ bookData, formErrors }: FullFormProps) {
       })}
 
       <button type='submit'>Create Book Record</button>
-    </Form>
+    </fetcher.Form>
   )
 }

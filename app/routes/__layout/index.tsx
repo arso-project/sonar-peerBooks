@@ -32,6 +32,8 @@ interface Author {
 
 export default function Layout() {
   const books = useLoaderData()
+  console.log(books)
+  books.map((book) => console.log(book.value.authors))
   return (
     <div>
       <div>
@@ -53,23 +55,28 @@ export default function Layout() {
                     <h2 className='text-xl text-slate-900'>{title}</h2>
                   </Link>
                   {record.value.authors &&
-                    record.value.authors.map((author: Author) => (
-                      <a href={author.url}>
-                        <p className='text-l text-slate-900'>
-                          Author: {author.name}
+                    record.value.authors.map((author: Author, i: number) => {
+                      return (
+                        <p key={i} className='text-l text-slate-900'>
+                          Author: {author}
                         </p>
-                      </a>
-                    ))}
+                      )
+                    })}
                   {record.value.publishers &&
                     record.value.publishers.map((publisher: Publisher) => (
                       <p className='text-l text-slate-900'>
-                        Publisher: {publisher.name}
+                        Publisher: {publisher}
                       </p>
                     ))}
 
                   {record.value.isbn && (
                     <p className='text-l text-slate-900'>
-                      ISBN: {record.value.isbn}
+                      ISBN: {record.value.isbn_10}
+                    </p>
+                  )}
+                  {record.value.isbn && (
+                    <p className='text-l text-slate-900'>
+                      ISBN: {record.value.isbn_10}
                     </p>
                   )}
                   {record.value.numberOfPages && (

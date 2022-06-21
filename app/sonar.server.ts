@@ -43,40 +43,11 @@ export async function openCollection(): Promise<Collection> {
   return collection
 }
 
-interface BookMetadata {
-  title: string
-  isbn: string
-  authors: string[]
-  url: string
-  identifiers: string[]
-  publishers: string[]
-  cover: string
-  fileId: string
-}
-
-export async function createBookRecord({
-  title,
-  isbn,
-  authors,
-  url,
-  identifiers,
-  publishers,
-  cover,
-  fileId,
-}: BookMetadata) {
+export async function createBookRecord(data: typeof schema.types.Book.fields) {
   const collection = await openCollection()
   const record = await collection.put({
     type: 'Book',
-    value: {
-      title: title,
-      authors: authors,
-      openLibraryUrl: url,
-      isbn: isbn,
-      identifiers: identifiers,
-      publishers: publishers,
-      coverImageUrl: cover || '',
-      file: fileId,
-    },
+    value: data,
   })
   return record
 }
