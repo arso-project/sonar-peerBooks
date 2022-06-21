@@ -3,7 +3,7 @@ import {
   Form,
   useActionData,
   useLoaderData,
-  useLocation
+  useLocation,
 } from '@remix-run/react'
 
 import { validateISBN } from '~/lib/utils'
@@ -90,7 +90,7 @@ export default function Index() {
   const actionData = useActionData()
   const bookData = actionData?.bookData
   const location = useLocation()
-
+  console.log(fileId)
   // if no file selected return a link to File selection
   if (!fileId) {
     return (

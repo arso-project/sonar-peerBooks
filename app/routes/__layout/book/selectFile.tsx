@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (formErrors.fileId) return formErrors
 
   const fileId = formData.get('file') as string
-  return redirect(`/book/addmetadata?${fileId}`)
+  return redirect(`/book/addmetadata?fileId=${fileId}`)
 }
 
 export const loader: LoaderFunction = async () => {
