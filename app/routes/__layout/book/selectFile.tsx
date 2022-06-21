@@ -8,13 +8,11 @@ import {
   unstable_parseMultipartFormData,
   writeAsyncIterableToWritable,
 } from '@remix-run/node'
-import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
+import { Form, useActionData, useLoaderData } from '@remix-run/react'
 
 import { PassThrough } from 'stream'
 import { validateFileId } from '~/lib/utils'
 import { openCollection, uploadFileToSonar } from '../../../sonar.server'
-
-import type { Files } from '@arsonar/client'
 
 export const action: ActionFunction = async ({ request }) => {
   const uploadHandler = unstable_composeUploadHandlers(
@@ -35,7 +33,7 @@ export const action: ActionFunction = async ({ request }) => {
   if (formErrors.fileId) return formErrors
 
   const fileId = formData.get('file') as string
-  return redirect(`/book/addmetadata?${fileId}`)
+  return redirect(`/book/addmetadata?fileId=${fileId}`)
 }
 
 export const loader: LoaderFunction = async () => {
