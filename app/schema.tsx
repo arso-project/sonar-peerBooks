@@ -28,6 +28,9 @@ export const schema: Spec = {
         subtitle: {
           type: 'string',
         },
+        coverImageUrl: {
+          type: 'string',
+        },
         isbn_10: {
           type: 'string',
         },
@@ -64,9 +67,7 @@ export const schema: Spec = {
         description: {
           type: 'string',
         },
-        coverImageUrl: {
-          type: 'string',
-        },
+
         file: {
           type: 'string',
         },

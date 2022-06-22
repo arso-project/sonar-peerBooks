@@ -10,6 +10,7 @@ import { GrDocumentPdf } from 'react-icons/gr'
 import { SiInternetarchive } from 'react-icons/si'
 
 import { openCollection } from '../../sonar.server'
+import { schema } from '~/schema'
 
 export const loader: LoaderFunction = async () => {
   const collection = await openCollection()
@@ -23,6 +24,8 @@ export const loader: LoaderFunction = async () => {
 
 export default function Layout() {
   const books = useLoaderData()
+  const fields = Object.entries(schema.types.Book.fields)
+
   return (
     <div>
       <div>
@@ -30,53 +33,85 @@ export default function Layout() {
           if (!record.value) {
             return <div>no data</div>
           }
-
-          const title =
-            record.value.title || 'No Title - ISBN: ' + record.value.isbn
           return (
-            <div key={i}>
-              <div className='flex py-4'>
-                <div className='pr-2'>
-                  <img src={record.value.coverImageUrl}></img>
+            <div key={i} className='p-2'>
+              <div className='flex'>
+                <div className='pr-2 mr-5 w-1/4 justify-center'>
+                  <img
+                    className='object-cover w-60'
+                    src={
+                      record.value.coverImageUrl !== '' || undefined
+                        ? record.value.coverImageUrl
+                        : '/placeholder.png'
+                    }
+                  ></img>
                 </div>
                 <div>
                   <Link to={'/book/' + record.id}>
-                    <h2 className='text-xl text-slate-900'>{title}</h2>
+                    <h2 className='text-xl text-pink-600'>
+                      {record.value.title}
+                    </h2>
                   </Link>
-                  {record.value.authors &&
-                    record.value.authors.map((author: string, i: number) => {
-                      return (
-                        <p key={i} className='text-l text-slate-900'>
-                          Author: {author}
-                        </p>
-                      )
+                  <h2 className='text-lg text-pink-600'>
+                    {record.value.subtitle}
+                  </h2>
+                  <div>
+                    {fields.map((field, i) => {
+                      if (
+                        field[0] === 'coverImageUrl' ||
+                        field[0] === 'title' ||
+                        field[0] === 'subtitle' ||
+                        field[0] === 'file' ||
+                        field[0] === 'openlibraryUrl'
+                      ) {
+                        return
+                      } else if (field[1]?.type === 'array') {
+                        return (
+                          <>
+                            {record.value[field[0]] && (
+                              <div key={i}>
+                                <span className='text-blue-800'>
+                                  {field[0]}
+                                </span>
+                                {record.value[field[0]].map(
+                                  (item: string, i: number) => {
+                                    return (
+                                      <span
+                                        key={i}
+                                        className='mx-4 text-l text-slate-900'
+                                      >
+                                        {item}
+                                      </span>
+                                    )
+                                  }
+                                )}
+                              </div>
+                            )}
+                          </>
+                        )
+                      } else {
+                        return (
+                          <div>
+                            {record.value[field[0]] && (
+                              <>
+                                <span className='text-blue-800'>
+                                  {field[0]}
+                                </span>
+
+                                <span
+                                  key={i}
+                                  className='mx-4 text-l text-slate-900'
+                                >
+                                  {record.value[field[0]]}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        )
+                      }
                     })}
-                  {record.value.publishers &&
-                    record.value.publishers.map((publisher: string) => (
-                      <p className='text-l text-slate-900'>
-                        Publisher: {publisher}
-                      </p>
-                    ))}
-
-                  {record.value.isbn && (
-                    <p className='text-l text-slate-900'>
-                      ISBN: {record.value.isbn_10}
-                    </p>
-                  )}
-                  {record.value.isbn && (
-                    <p className='text-l text-slate-900'>
-                      ISBN: {record.value.isbn_10}
-                    </p>
-                  )}
-                  {record.value.numberOfPages && (
-                    <p> Number of Pages: {record.value.numberOfPages}</p>
-                  )}
-                  {record.value.description && (
-                    <p>{record.value.description}</p>
-                  )}
-
-                  <div className='flex'>
-                    {' '}
+                  </div>
+                  <div key={i} className='flex'>
                     {record.value.file && (
                       <a className='mr-2' href={'/files/' + record.value.file}>
                         <div className='flex flex-row align-middle'>
