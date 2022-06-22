@@ -17,7 +17,6 @@ export let loader: LoaderFunction = async ({ request, params }) => {
 
 export default function Page() {
   let record = useLoaderData()
-  console.log('LOADED RECORD', record)
 
   return (
     <div data-p-page>
@@ -37,7 +36,6 @@ export default function Page() {
         ))}
       {record.value &&
         Object.entries(record.value).map((value) => {
-          console.log(value[1], typeof value[1])
           if (typeof value[1] === 'string' && value[1] !== '') {
             return (
               <div>

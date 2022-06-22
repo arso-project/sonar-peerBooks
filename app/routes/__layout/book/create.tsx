@@ -21,7 +21,6 @@ export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
   const fields = Object.entries(schema.types.Book.fields)
   const data = fields.map((field) => formData.get(field[0]) as string)
-
   const formErrors: any = {}
   const obj: any = {}
   fields.forEach((field, i) => {

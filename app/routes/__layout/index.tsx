@@ -20,20 +20,9 @@ export const loader: LoaderFunction = async () => {
   const files = await collection.query('records', { type: 'sonar/file' })
   return json(books)
 }
-interface Publisher {
-  url: string
-  name: string
-}
-
-interface Author {
-  url: string
-  name: string
-}
 
 export default function Layout() {
   const books = useLoaderData()
-  console.log(books)
-  books.map((book) => console.log(book.value.authors))
   return (
     <div>
       <div>
@@ -55,7 +44,7 @@ export default function Layout() {
                     <h2 className='text-xl text-slate-900'>{title}</h2>
                   </Link>
                   {record.value.authors &&
-                    record.value.authors.map((author: Author, i: number) => {
+                    record.value.authors.map((author: string, i: number) => {
                       return (
                         <p key={i} className='text-l text-slate-900'>
                           Author: {author}
@@ -63,7 +52,7 @@ export default function Layout() {
                       )
                     })}
                   {record.value.publishers &&
-                    record.value.publishers.map((publisher: Publisher) => (
+                    record.value.publishers.map((publisher: string) => (
                       <p className='text-l text-slate-900'>
                         Publisher: {publisher}
                       </p>
@@ -98,8 +87,8 @@ export default function Layout() {
                         </div>
                       </a>
                     )}
-                    {record.value.openLibraryUrl && (
-                      <a href={record.value.openLibraryUrl}>
+                    {record.value.openlibraryUrl && (
+                      <a href={record.value.openlibraryUrl}>
                         <div className='flex flex-row align-middle'>
                           <SiInternetarchive />
                           <span className='mx-1 text-sm text-pink-600'>
