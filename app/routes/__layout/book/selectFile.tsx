@@ -8,7 +8,8 @@ import {
   unstable_parseMultipartFormData,
   writeAsyncIterableToWritable,
 } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import { Form, useActionData, useLoaderData, Link } from '@remix-run/react'
+import { GrDocumentPdf } from 'react-icons/gr'
 
 import { PassThrough } from 'stream'
 import { validateFileId } from '~/lib/utils'
@@ -47,38 +48,71 @@ export default function SelectFile() {
   const files = useLoaderData()
   return (
     <div>
-      {files.map((file: any, i: number) => {
-        if (file.value.contentType === 'application/pdf') {
-          return (
-            <div key={i}>
-              <a className='mr-2' href={'/book/addmetadata?fileId=' + file.id}>
-                <div className='flex flex-row align-middle'>
-                  <span className='mx-1 text-sm text-pink-600'>
-                    {file.value.filename}
-                  </span>
+      <div className='bg-gray-200 text-white flex'>
+        <div className='bg-pink-600 p-4 text-center w-full'>
+          <h3>Step 1 - Select or import a PDF</h3>
+        </div>
+        <div className='p-4 text-center w-full'>
+          <h3>Step 2 (optional) - Load Metadata</h3>
+        </div>
+        <div className=' p-4 text-center w-full'>
+          <h3>Step 3 - Create Book Record</h3>
+        </div>
+      </div>
+      <div className='p-4 my-4'>
+        <label
+          className='block mb-2 text-sm font-medium text-gray-900'
+          htmlFor='formFile'
+        >
+          Select a file:
+        </label>
+        <div className='grid grid-cols-6 '>
+          {files.map((file: any, i: number) => {
+            if (file.value.contentType === 'application/pdf') {
+              return (
+                <div key={i} className='mx-4'>
+                  <a
+                    className='mr-2'
+                    href={'/book/addmetadata?fileId=' + file.id}
+                  >
+                    <GrDocumentPdf className='text-7xl ' />
+
+                    <span className='text-sm text-pink-600'>
+                      {file.value.filename.length > 15
+                        ? file.value.filename.substring(0, 10) +
+                          '...' +
+                          file.value.filename.substring(
+                            file.value.filename.length - 6
+                          )
+                        : file.value.filename}
+                    </span>
+                  </a>
                 </div>
-              </a>
-            </div>
-          )
-        }
-      })}
-      <Form method='post' encType='multipart/form-data'>
-        {/* <label htmlFor='formFile'>File</label>
-        <select id='formFile' name='fileId'>
-          {files.map((file: any) => {
-            return <option value={file.id}>{file.value.filename}</option>
+              )
+            }
           })}
-        </select>
-        {actionData?.formErrors?.fileId ? (
-          <p style={{ color: 'red' }}>{actionData?.formErrors?.fileId}</p>
-        ) : null} */}
-        <label htmlFor='formFile'>File</label>
-        <input type='file' id='formFile' name='file' accept='application/pdf' />
-        {actionData?.formErrors?.file ? (
-          <p style={{ color: 'red' }}>{actionData?.formErrors?.file}</p>
-        ) : null}
-        <button type='submit'>Submit</button>
-      </Form>
+        </div>
+        <div className='my-4'>
+          <Form method='post' encType='multipart/form-data'>
+            <label
+              className='block mb-2 text-sm font-medium text-gray-900'
+              htmlFor='formFile'
+            >
+              Import new File:
+            </label>
+            <input
+              type='file'
+              id='formFile'
+              name='file'
+              accept='application/pdf'
+            />
+            {actionData?.formErrors?.file ? (
+              <p style={{ color: 'red' }}>{actionData?.formErrors?.file}</p>
+            ) : null}
+            <button type='submit'>Submit</button>
+          </Form>
+        </div>
+      </div>
     </div>
   )
 }
