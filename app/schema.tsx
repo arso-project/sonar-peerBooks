@@ -49,7 +49,7 @@ export const schema: Spec = {
         publish_date: {
           type: 'string',
         },
-        openLibraryUrl: {
+        openlibraryUrl: {
           type: 'string',
         },
         inLanguage: {
@@ -65,6 +65,9 @@ export const schema: Spec = {
           type: 'string',
         },
         coverImageUrl: {
+          type: 'string',
+        },
+        file: {
           type: 'string',
         },
       },

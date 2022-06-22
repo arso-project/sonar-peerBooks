@@ -4,7 +4,6 @@ export default async function fetchOpenLibraryData(isbn: string) {
     'https://openlibrary.org/api/books?bibkeys=' +
     identifier +
     '&jscmd=data&format=json'
-  //console.log('OPENLIBURL: ', url)
   const res = await fetch(url)
     .then((res) => {
       if (!res.ok) {
@@ -16,9 +15,7 @@ export default async function fetchOpenLibraryData(isbn: string) {
       return data[identifier]
     })
     .catch((error) => {
-      console.log('Error: ', error)
       return error
     })
-  //console.log('RESULT FETCHOPENLIB: ', res)
   return res
 }

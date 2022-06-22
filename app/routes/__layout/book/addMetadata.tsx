@@ -30,6 +30,7 @@ export const action: ActionFunction = async ({ request }) => {
       error: { openlib: err },
     })
   }
+
   const bookData = openlibraryData
     ? {
         title: openlibraryData?.title || '',
@@ -39,7 +40,7 @@ export const action: ActionFunction = async ({ request }) => {
         number_of_pages: openlibraryData?.number_of_pages || '',
         excerpts: String(
           openlibraryData?.excerpts?.map(
-            (excerpts: { text: string; comment: string }) => excerpts.name
+            (excerpts: { text: string; comment: string }) => excerpts.text
           ) || ''
         ),
         openlibraryId: String(openlibraryData?.identifiers?.openlibrary || ''),
@@ -66,6 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
           openlibraryData?.cover?.medium || openlibraryData?.cover?.small || '',
       }
     : undefined
+
   if (!bookData) return json('NO DATA')
   return json({ bookData })
 }
@@ -78,7 +80,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     parseInt(url.searchParams.get('manual') || '0') === 1 ? true : false
   if (typeof fileId !== 'string') return { meta: undefined, fileId: undefined }
   const meta = await collection.files.getFileMetadata(fileId)
-  console.log(meta, fileId, manual)
   return { meta, fileId, manual }
 }
 
@@ -87,7 +88,6 @@ export default function Index() {
   const actionData = useActionData()
   const bookData = actionData?.bookData
   const location = useLocation()
-  console.log(fileId)
   // if no file selected return a link to File selection
   if (!fileId) {
     return (
@@ -124,7 +124,11 @@ export default function Index() {
         </div>
       )}
       {(bookData || manual) && (
-        <FullForm bookData={bookData} formErrors={actionData?.formErrors} />
+        <FullForm
+          fileId={fileId}
+          bookData={bookData}
+          formErrors={actionData?.formErrors}
+        />
       )}
     </div>
   )
@@ -142,7 +146,7 @@ function FormField({ name, type, defaultValue, formErrors }: FormFieldProps) {
   return (
     <div>
       <label htmlFor={name}>{name}</label>
-      <input type={type} name={name} id='name' defaultValue={defaultValue} />
+      <input type={type} name={name} id={name} defaultValue={defaultValue} />
       {formErrors?.get(name) ? (
         <p style={{ color: 'red' }}>{formErrors?.get(name)}</p>
       ) : null}
@@ -153,13 +157,16 @@ function FormField({ name, type, defaultValue, formErrors }: FormFieldProps) {
 interface FullFormProps {
   bookData: any //ToDo: BookData
   formErrors: FormErrors
+  fileId: string
 }
-function FullForm({ bookData, formErrors }: FullFormProps) {
+function FullForm({ fileId, bookData, formErrors }: FullFormProps) {
   const fetcher = useFetcher()
   const fields = Object.keys(schema.types.Book.fields)
   return (
     <fetcher.Form action='/book/create' method='post'>
       {fields.map((field, i) => {
+        if (field === 'file')
+          return <input type={'hidden'} name={field} id='name' value={fileId} />
         return (
           <FormField
             key={i}
