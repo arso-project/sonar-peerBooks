@@ -71,6 +71,9 @@ export const schema: Spec = {
         file: {
           type: 'string',
         },
+        fullText: {
+          type: 'string'
+        }
       },
     },
   },

@@ -2,6 +2,7 @@ import { Workspace } from '@arsonar/client'
 import type { Collection } from '@arsonar/client'
 import Dotenv from 'dotenv'
 import { schema } from './schema'
+import { extractTextFromFile } from './lib/extract.js'
 
 Dotenv.config()
 
@@ -43,8 +44,11 @@ export async function openCollection(): Promise<Collection> {
   return collection
 }
 
-export async function createBookRecord(data: typeof schema.types.Book.fields) {
+export async function createBookRecord(data: any) {
   const collection = await openCollection()
+  const fileId = data.file
+  const fullText = await extractTextFromFile(collection, fileId)
+  if (fullText.fullText) data.fullText = fullText.fullText
   const record = await collection.put({
     type: 'Book',
     value: data,
