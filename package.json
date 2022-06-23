@@ -8,13 +8,15 @@
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css"
   },
   "dependencies": {
-    "@arsonar/client": "^0.6.0-alpha.5",
+    "@arsonar/client": "^0.6.0-alpha.6",
+    "@arsonar/server": "^0.6.0-alpha.6",
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
     "@remix-run/serve": "^1.5.1",
     "autoprefixer": "^10.4.7",
     "concurrently": "^7.2.2",
     "dotenv": "^16.0.1",
+    "find-free-port": "^2.0.0",
     "postcss": "^8.4.14",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
