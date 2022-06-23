@@ -14,8 +14,8 @@
     "start:sonar": "sonar start -s ./.data --disable-authentication"
   },
   "dependencies": {
-    "@arsonar/client": "^0.6.0-alpha.6",
-    "@arsonar/server": "^0.6.0-alpha.6",
+    "@arsonar/client": "^0.6.0-beta.1",
+    "@arsonar/server": "^0.6.0-beta.1",
     "@remix-run/node": "^1.5.1",
     "@remix-run/react": "^1.5.1",
     "@remix-run/serve": "^1.5.1",
