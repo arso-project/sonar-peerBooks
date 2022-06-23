@@ -5,6 +5,7 @@ import {
   useLoaderData,
   useParams,
   useCatch,
+  Form,
 } from '@remix-run/react'
 import { GrDocumentPdf } from 'react-icons/gr'
 import { SiInternetarchive } from 'react-icons/si'
@@ -39,6 +40,10 @@ export default function Layout() {
           >
             + import new book
           </Link>
+          <Form action='/search' method='get'>
+            <input type='text' name='q' placeholder='Search...' />
+            <button type='submit'>Go!</button>
+          </Form>
         </div>
       </div>
       <div>
