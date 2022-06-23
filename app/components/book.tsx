@@ -1,7 +1,5 @@
-import { Record } from "@arsonar/client/index.js"
-import {
-  Link,
-} from '@remix-run/react'
+import { Record } from '@arsonar/client/index.js'
+import { Link } from '@remix-run/react'
 import { GrDocumentPdf } from 'react-icons/gr'
 import { SiInternetarchive } from 'react-icons/si'
 import { schema } from '~/schema'
@@ -10,7 +8,7 @@ export type BookProps = {
   record: Record
 }
 
-export function Book (props: BookProps) {
+export function Book(props: BookProps) {
   const fields = Object.entries(schema.types.Book.fields)
   const { record } = props
   if (!record) return null
@@ -29,13 +27,9 @@ export function Book (props: BookProps) {
         </div>
         <div>
           <Link to={'/book/' + record.id}>
-            <h2 className='text-xl text-pink-600'>
-              {record.value.title}
-            </h2>
+            <h2 className='text-xl text-pink-600'>{record.value.title}</h2>
           </Link>
-          <h2 className='text-lg text-pink-600'>
-            {record.value.subtitle}
-          </h2>
+          <h2 className='text-lg text-pink-600'>{record.value.subtitle}</h2>
           <div>
             {fields.map((field, i) => {
               if (
@@ -48,12 +42,10 @@ export function Book (props: BookProps) {
                 return
               } else if (field[1]?.type === 'array') {
                 return (
-                  <>
+                  <div key={i}>
                     {record.value[field[0]] && (
-                      <div key={i}>
-                        <span className='text-blue-800'>
-                          {field[0]}
-                        </span>
+                      <div>
+                        <span className='text-blue-800'>{field[0]}</span>
                         {record.value[field[0]].map(
                           (item: string, i: number) => {
                             return (
@@ -68,21 +60,16 @@ export function Book (props: BookProps) {
                         )}
                       </div>
                     )}
-                  </>
+                  </div>
                 )
               } else {
                 return (
                   <div>
                     {record.value[field[0]] && (
                       <>
-                        <span className='text-blue-800'>
-                          {field[0]}
-                        </span>
+                        <span className='text-blue-800'>{field[0]}</span>
 
-                        <span
-                          key={i}
-                          className='mx-4 text-l text-slate-900'
-                        >
+                        <span key={i} className='mx-4 text-l text-slate-900'>
                           {record.value[field[0]]}
                         </span>
                       </>
@@ -97,9 +84,7 @@ export function Book (props: BookProps) {
               <a className='mr-2' href={'/files/' + record.value.file}>
                 <div className='flex flex-row align-middle'>
                   <GrDocumentPdf />
-                  <span className='mx-1 text-sm text-pink-600'>
-                    Download
-                  </span>
+                  <span className='mx-1 text-sm text-pink-600'>Download</span>
                 </div>
               </a>
             )}

@@ -67,8 +67,7 @@ export const action: ActionFunction = async ({ request }) => {
           openlibraryData?.cover?.medium || openlibraryData?.cover?.small || '',
       }
     : undefined
-
-  if (!bookData) return json('NO DATA')
+  if (!bookData) return json({ noOpenlibraryData: true })
   return json({ bookData })
 }
 
@@ -87,6 +86,7 @@ export default function Index() {
   const { meta, fileId, manual } = useLoaderData()
   const actionData = useActionData()
   const bookData = actionData?.bookData
+  const noOpenlibraryData = actionData?.noOpenlibraryData
   const location = useLocation()
   // if no file selected return a link to File selection
   if (!fileId) {
@@ -103,7 +103,7 @@ export default function Index() {
 
   return (
     <div>
-      {!bookData && !manual && (
+      {!bookData && !manual && !noOpenlibraryData && (
         <div>
           <p>
             Load the metadata for file {meta.value.filename} using the ISBN from
@@ -123,7 +123,7 @@ export default function Index() {
           </Form>
         </div>
       )}
-      {(bookData || manual) && (
+      {(bookData || manual || noOpenlibraryData) && (
         <FullForm
           fileId={fileId}
           bookData={bookData}
