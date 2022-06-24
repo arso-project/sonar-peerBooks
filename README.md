@@ -16,4 +16,4 @@ yarn start
 
 ## Development
 
-Run yarn dev to start Sonar and also run the Remix server in development mode.
+Run `yarn dev` to start Sonar and also run the Remix server in development mode.
