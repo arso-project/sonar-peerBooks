@@ -27,7 +27,9 @@ export function Book(props: BookProps) {
         </div>
         <div>
           <Link to={'/book/' + record.id}>
-            <h2 className='text-xl text-pink-600'>{record.value.title}</h2>
+            <h2 className='text-xl text-pink-600'>
+              {record.value.title || 'No Title'}
+            </h2>
           </Link>
           <h2 className='text-lg text-pink-600'>{record.value.subtitle}</h2>
           <div>
@@ -43,23 +45,24 @@ export function Book(props: BookProps) {
               } else if (field[1]?.type === 'array') {
                 return (
                   <div key={i}>
-                    {record.value[field[0]] && (
-                      <div>
-                        <span className='text-blue-800'>{field[0]}</span>
-                        {record.value[field[0]].map(
-                          (item: string, i: number) => {
-                            return (
-                              <span
-                                key={i}
-                                className='mx-4 text-l text-slate-900'
-                              >
-                                {item}
-                              </span>
-                            )
-                          }
-                        )}
-                      </div>
-                    )}
+                    {record.value[field[0]] &&
+                      record.value[field[0]][0] !== '' && (
+                        <div>
+                          <span className='text-blue-800'>{field[0]}</span>
+                          {record.value[field[0]].map(
+                            (item: string, i: number) => {
+                              return (
+                                <span
+                                  key={i}
+                                  className='mx-4 text-l text-slate-900'
+                                >
+                                  {item}
+                                </span>
+                              )
+                            }
+                          )}
+                        </div>
+                      )}
                   </div>
                 )
               } else {

@@ -3,6 +3,7 @@ import { useCatch, useLoaderData } from '@remix-run/react'
 import { json } from '@remix-run/node'
 import { useParams } from 'react-router-dom'
 import { openCollection } from '../../../sonar.server'
+import { Book } from '~/components/book'
 
 export let loader: LoaderFunction = async ({ request, params }) => {
   const id = params.id
@@ -20,31 +21,7 @@ export default function Page() {
 
   return (
     <div data-p-page>
-      <h1>{record.value.title}</h1>
-      <span>id:{record.id}</span>
-      {record.value.authors &&
-        record.value.authors.map((author: Author, i: number) => {
-          return (
-            <p key={i} className='text-l text-slate-900'>
-              {author}
-            </p>
-          )
-        })}
-      {record.value.publishers &&
-        record.value.publishers.map((publisher: Publisher) => (
-          <p className='text-l text-slate-900'>Publisher: {publisher}</p>
-        ))}
-      {record.value &&
-        Object.entries(record.value).map((value) => {
-          if (typeof value[1] === 'string' && value[1] !== '') {
-            return (
-              <div>
-                <span>{value[0] + ': '}</span>
-                <span>{value[1]}</span>
-              </div>
-            )
-          }
-        })}
+      <Book record={record} />
     </div>
   )
 }

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    button {
+        @apply px-1.5 py-1 text-base text-gray-700 bg-clip-padding border border-solid border-gray-300 rounded-lg;
+    }
+    input {
+        @apply px-1.5 py-1 border-gray-300 rounded-lg border border-solid mx-2 text-gray-700
+    }
+    label {
+        @apply text-gray-700 text-base
+
+    }
+}

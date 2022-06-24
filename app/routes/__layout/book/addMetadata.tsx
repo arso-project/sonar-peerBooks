@@ -12,6 +12,8 @@ import { schema } from '~/schema'
 import fetchOpenLibraryData from '../../../lib/openLibrary'
 import { openCollection } from '../../../sonar.server'
 
+import { ImportMenu } from '~/components/importMenu'
+
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
 
@@ -43,11 +45,11 @@ export const action: ActionFunction = async ({ request }) => {
             (excerpts: { text: string; comment: string }) => excerpts.text
           ) || ''
         ),
-        openlibraryId: String(openlibraryData?.identifiers?.openlibrary || ''),
+        openlibraryId: String(openlibraryData?.identifiers?.openlibrary),
         publishers: String(
           openlibraryData?.publishers?.map(
             (publisher: { name: string; url: string }) => publisher.name
-          ) || ''
+          )
         ),
         publish_date: openlibraryData?.publish_date || '',
         openlibraryUrl: openlibraryData?.url,
@@ -59,7 +61,7 @@ export const action: ActionFunction = async ({ request }) => {
         authors: String(
           openlibraryData?.authors?.map(
             (authors: { name: string; url: string }) => authors.name
-          ) || ''
+          )
         ),
         description: openlibraryData?.description || '',
 
@@ -92,11 +94,14 @@ export default function Index() {
   if (!fileId) {
     return (
       <div>
-        Please first
-        <a className='mr-2' href={'selectfile'}>
-          <span className='mx-1 text-sm text-pink-600'> select a file </span>
-        </a>
-        for this Bookrecord{' '}
+        <ImportMenu step={2} />
+        <div className='p-2'>
+          Please first
+          <a className='mr-2' href={'selectfile'}>
+            <span className='mx-1 text-sm text-pink-600'> select a file </span>
+          </a>
+          for this Bookrecord{' '}
+        </div>
       </div>
     )
   }
@@ -105,30 +110,41 @@ export default function Index() {
     <div>
       {!bookData && !manual && !noOpenlibraryData && (
         <div>
-          <p>
-            Load the metadata for file {meta.value.filename} using the ISBN from
-            OpenLibrary or fill in the form{' '}
-            <a href={location.pathname + location.search + '&manual=1'}>
-              manually
-            </a>
-            .
-          </p>
-          <Form action={`${location.pathname}${location.search}`} method='post'>
-            <label htmlFor='formISBN'>ISBN</label>
-            <input type='text' name='isbn' id='formISBN' />
-            {actionData?.formErrors?.isbn ? (
-              <p style={{ color: 'red' }}>{actionData?.formErrors?.isbn}</p>
-            ) : null}
-            <button type='submit'>Submit</button>
-          </Form>
+          <ImportMenu step={2} />
+          <div className='p-2'>
+            <p>
+              Load the metadata for file {meta.value.filename} using the ISBN
+              from OpenLibrary or fill in the form{' '}
+              <a href={location.pathname + location.search + '&manual=1'}>
+                manually
+              </a>
+              .
+            </p>
+            <Form
+              action={`${location.pathname}${location.search}`}
+              method='post'
+            >
+              <label htmlFor='formISBN'>ISBN</label>
+              <input type='text' name='isbn' id='formISBN' />
+              {actionData?.formErrors?.isbn ? (
+                <p style={{ color: 'red' }}>{actionData?.formErrors?.isbn}</p>
+              ) : null}
+              <button className='button' type='submit'>
+                Submit
+              </button>
+            </Form>
+          </div>
         </div>
       )}
       {(bookData || manual || noOpenlibraryData) && (
-        <FullForm
-          fileId={fileId}
-          bookData={bookData}
-          formErrors={actionData?.formErrors}
-        />
+        <div>
+          <ImportMenu step={3} />
+          <FullForm
+            fileId={fileId}
+            bookData={bookData}
+            formErrors={actionData?.formErrors}
+          />
+        </div>
       )}
     </div>
   )
@@ -146,7 +162,13 @@ function FormField({ name, type, defaultValue, formErrors }: FormFieldProps) {
   return (
     <div>
       <label htmlFor={name}>{name}</label>
-      <input type={type} name={name} id={name} defaultValue={defaultValue} />
+      <input
+        className='block'
+        type={type}
+        name={name}
+        id={name}
+        defaultValue={defaultValue}
+      />
       {formErrors?.get(name) ? (
         <p style={{ color: 'red' }}>{formErrors?.get(name)}</p>
       ) : null}

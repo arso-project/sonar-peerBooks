@@ -14,6 +14,7 @@ import { GrDocumentPdf } from 'react-icons/gr'
 import { PassThrough } from 'stream'
 import { validateFileId } from '~/lib/utils'
 import { openCollection, uploadFileToSonar } from '../../../sonar.server'
+import { ImportMenu } from '~/components/importMenu'
 
 export const action: ActionFunction = async ({ request }) => {
   const uploadHandler = unstable_composeUploadHandlers(
@@ -48,17 +49,7 @@ export default function SelectFile() {
   const files = useLoaderData()
   return (
     <div>
-      <div className='bg-gray-200 text-white flex'>
-        <div className='bg-pink-600 p-4 text-center w-full'>
-          <h3>Step 1 - Select or import a PDF</h3>
-        </div>
-        <div className='p-4 text-center w-full'>
-          <h3>Step 2 (optional) - Load Metadata</h3>
-        </div>
-        <div className=' p-4 text-center w-full'>
-          <h3>Step 3 - Create Book Record</h3>
-        </div>
-      </div>
+      <ImportMenu step={1} />
       <div className='p-4 my-4'>
         <label
           className='block mb-2 text-sm font-medium text-gray-900'
