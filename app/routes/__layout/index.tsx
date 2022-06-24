@@ -1,10 +1,9 @@
 import { json, LoaderFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 
-import { openCollection } from '../../sonar.server'
-import { schema } from '~/schema'
-import { Book } from '~/components/book'
 import type { Record } from '@arsonar/client'
+import { Book } from '~/components/book'
+import { openCollection } from '../../sonar.server'
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url)
@@ -14,7 +13,6 @@ export const loader: LoaderFunction = async ({ request }) => {
   const unsortedBooks = await collection.query('records', {
     type: 'sonar-peerBooks/Book',
   })
-  const files = await collection.query('records', { type: 'sonar/file' })
   const books = unsortedBooks.sort(function (x: Record, y: Record) {
     return parseInt(y.timestamp || '0') - parseInt(x.timestamp || '0')
   })
@@ -27,11 +25,16 @@ export default function Layout() {
   return (
     <div>
       {successId && (
-        <div className='p-4 text-xl bg-green-500'>
-          Success - New record with id {successId} created!
+        <div className='p-4 text-xl flex justify-between bg-slate-800 text-white'>
+          <span>
+            Success - New record with id{' '}
+            <Link to={'/book/' + successId}>{successId}</Link> created!
+          </span>
+          <Link to='/'>X</Link>
         </div>
       )}
-      <div>
+      <div className='my-8 p-4'>
+        <h2>Books</h2>
         {books.map((record: any, i: number) => {
           if (!record.value) {
             return <div>no data</div>

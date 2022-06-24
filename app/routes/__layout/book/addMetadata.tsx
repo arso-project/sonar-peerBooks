@@ -9,10 +9,14 @@ import {
 
 import { validateISBN } from '~/lib/utils'
 import { schema } from '~/schema'
-import fetchOpenLibraryData from '../../../lib/openLibrary'
+import fetchOpenLibraryData, {
+  mapOpenlibraryData,
+} from '../../../lib/openLibrary'
 import { openCollection } from '../../../sonar.server'
 
-import { ImportMenu } from '~/components/importMenu'
+import { StepDisplay } from '~/components/stepDisplay'
+import { FullForm, FormField } from '~/components/form'
+import { Link } from '@remix-run/react'
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
@@ -34,40 +38,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const bookData = openlibraryData
-    ? {
-        title: openlibraryData?.title || '',
-        subtitle: openlibraryData?.subtitle || '',
-        isbn_10: String(openlibraryData?.identifiers?.isbn_10 || ''),
-        isbn_13: String(openlibraryData?.identifiers?.isbn_13 || ''),
-        number_of_pages: openlibraryData?.number_of_pages || '',
-        excerpts: String(
-          openlibraryData?.excerpts?.map(
-            (excerpts: { text: string; comment: string }) => excerpts.text
-          ) || ''
-        ),
-        openlibraryId: String(openlibraryData?.identifiers?.openlibrary),
-        publishers: String(
-          openlibraryData?.publishers?.map(
-            (publisher: { name: string; url: string }) => publisher.name
-          )
-        ),
-        publish_date: openlibraryData?.publish_date || '',
-        openlibraryUrl: openlibraryData?.url,
-        genre: String(
-          openlibraryData?.genre?.map(
-            (genre: { name: string; url: string }) => genre.name
-          ) || ''
-        ),
-        authors: String(
-          openlibraryData?.authors?.map(
-            (authors: { name: string; url: string }) => authors.name
-          )
-        ),
-        description: openlibraryData?.description || '',
-
-        coverImageUrl:
-          openlibraryData?.cover?.medium || openlibraryData?.cover?.small || '',
-      }
+    ? mapOpenlibraryData(openlibraryData)
     : undefined
   if (!bookData) return json({ noOpenlibraryData: true })
   return json({ bookData })
@@ -94,23 +65,17 @@ export default function Index() {
   if (!fileId) {
     return (
       <div>
-        <ImportMenu step={2} />
-        <div className='p-2'>
-          Please first
-          <a className='mr-2' href={'selectfile'}>
-            <span className='mx-1 text-sm text-pink-600'> select a file </span>
-          </a>
-          for this Bookrecord{' '}
-        </div>
+        <StepDisplay step={2} />
+        <MissingFileIdMessage />
       </div>
     )
   }
-
   return (
     <div>
+      {/* Fetch data from OpenLibrary */}
       {!bookData && !manual && !noOpenlibraryData && (
         <div>
-          <ImportMenu step={2} />
+          <StepDisplay step={2} />
           <div className='p-2'>
             <p>
               Load the metadata for file {meta.value.filename} using the ISBN
@@ -124,83 +89,42 @@ export default function Index() {
               action={`${location.pathname}${location.search}`}
               method='post'
             >
-              <label htmlFor='formISBN'>ISBN</label>
-              <input type='text' name='isbn' id='formISBN' />
-              {actionData?.formErrors?.isbn ? (
-                <p style={{ color: 'red' }}>{actionData?.formErrors?.isbn}</p>
-              ) : null}
-              <button className='button' type='submit'>
+              <FormField
+                name='isbn'
+                type='text'
+                formErrors={actionData?.formErrors}
+              />
+              <button className='m-2 button' type='submit'>
                 Submit
               </button>
             </Form>
           </div>
         </div>
       )}
+      {/* Create Record with data from OpenLibrary or add Data manually */}
       {(bookData || manual || noOpenlibraryData) && (
         <div>
-          <ImportMenu step={3} />
-          <FullForm
-            fileId={fileId}
-            bookData={bookData}
-            formErrors={actionData?.formErrors}
-          />
+          <StepDisplay step={3} />
+          <div className='p-4'>
+            <FullForm
+              fileId={fileId}
+              bookData={bookData}
+              formErrors={actionData?.formErrors}
+            />
+          </div>
         </div>
       )}
     </div>
   )
 }
 
-interface FormErrors {
-  [key: string]: any
-}
-
-interface FormFieldProps extends React.ComponentPropsWithoutRef<'input'> {
-  formErrors: FormErrors
-}
-
-function FormField({ name, type, defaultValue, formErrors }: FormFieldProps) {
+function MissingFileIdMessage() {
   return (
-    <div>
-      <label htmlFor={name}>{name}</label>
-      <input
-        className='block'
-        type={type}
-        name={name}
-        id={name}
-        defaultValue={defaultValue}
-      />
-      {formErrors?.get(name) ? (
-        <p style={{ color: 'red' }}>{formErrors?.get(name)}</p>
-      ) : null}
+    <div className='p-2'>
+      Please first
+      <Link className='mr-2' to={'selectfile'}>
+        <span className='mx-1 text-sm text-pink-600'> select a file </span>
+      </Link>
     </div>
-  )
-}
-
-interface FullFormProps {
-  bookData: any //ToDo: BookData
-  formErrors: FormErrors
-  fileId: string
-}
-function FullForm({ fileId, bookData, formErrors }: FullFormProps) {
-  const fetcher = useFetcher()
-  const fields = Object.keys(schema.types.Book.fields)
-  return (
-    <fetcher.Form action='/book/create' method='post'>
-      {fields.map((field, i) => {
-        if (field === 'file')
-          return <input type={'hidden'} name={field} id='name' value={fileId} />
-        return (
-          <FormField
-            key={i}
-            name={field}
-            defaultValue={bookData?.[field] || ''}
-            formErrors={formErrors}
-            type='text'
-          />
-        )
-      })}
-
-      <button type='submit'>Create Book Record</button>
-    </fetcher.Form>
   )
 }

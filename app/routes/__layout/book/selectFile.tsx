@@ -14,7 +14,7 @@ import { GrDocumentPdf } from 'react-icons/gr'
 import { PassThrough } from 'stream'
 import { validateFileId } from '~/lib/utils'
 import { openCollection, uploadFileToSonar } from '../../../sonar.server'
-import { ImportMenu } from '~/components/importMenu'
+import { StepDisplay } from '~/components/stepDisplay'
 
 export const action: ActionFunction = async ({ request }) => {
   const uploadHandler = unstable_composeUploadHandlers(
@@ -49,7 +49,7 @@ export default function SelectFile() {
   const files = useLoaderData()
   return (
     <div>
-      <ImportMenu step={1} />
+      <StepDisplay step={1} />
       <div className='p-4 my-4'>
         <label
           className='block mb-2 text-sm font-medium text-gray-900'

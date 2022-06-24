@@ -13,4 +13,21 @@
         @apply text-gray-700 text-base
 
     }
+    a {
+        @apply text-pink-600
+    }
+
+    h1,h2,h3 {
+        @apply text-slate-900
+    }
+
+    h2 {
+        @apply text-2xl
+    }
+
+    h3 {
+        @apply text-xl
+    }
+
+
 }

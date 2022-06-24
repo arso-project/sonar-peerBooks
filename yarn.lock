@@ -8420,6 +8420,11 @@ read-pkg@^5.2.0:
     parse-json "^5.0.0"
     type-fest "^0.6.0"
 
+readable-bytes@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/readable-bytes/-/readable-bytes-2.0.2.tgz#b4b5a52ccfa90d2fddd047ba393ff87f68de38fc"
+  integrity sha512-Y264rIxwJEbo8R863u66T61qwKpdooTtJm5m4KfIW408Xdc/v+IEGi24z1NmnqmhZJl+0aeJE8m7nEf+a1488g==
+
 "readable-stream@2 || 3", readable-stream@3, readable-stream@^3.0.0, readable-stream@^3.0.2, readable-stream@^3.1.1, readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"

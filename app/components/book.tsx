@@ -14,8 +14,8 @@ export function Book(props: BookProps) {
   if (!record) return null
   return (
     <div className='p-2'>
-      <div className='flex'>
-        <div className='pr-2 mr-5 w-1/4 justify-center'>
+      <div className='flex flex-shrink-0 justify-start'>
+        <div className='pr-2 mr-5 justify-center'>
           <img
             className='object-cover w-60'
             src={
@@ -48,7 +48,7 @@ export function Book(props: BookProps) {
                     {record.value[field[0]] &&
                       record.value[field[0]][0] !== '' && (
                         <div>
-                          <span className='text-blue-800'>{field[0]}</span>
+                          <span className='text-slate-400'>{field[0]}</span>
                           {record.value[field[0]].map(
                             (item: string, i: number) => {
                               return (
@@ -70,7 +70,7 @@ export function Book(props: BookProps) {
                   <div>
                     {record.value[field[0]] && (
                       <>
-                        <span className='text-blue-800'>{field[0]}</span>
+                        <span className='text-slate-400'>{field[0]}</span>
 
                         <span key={i} className='mx-4 text-l text-slate-900'>
                           {record.value[field[0]]}

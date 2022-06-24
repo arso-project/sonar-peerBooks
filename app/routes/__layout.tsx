@@ -26,23 +26,34 @@ export default function Layout() {
   const books = useLoaderData()
   return (
     <div>
-      <div className='p-2 bg-blue-600 flex-1 flex items-end justify-end sm:items-stretch sm:justify-start'>
-        <div className='flex-shrink-0 flex  items-end'>
+      <div className='p-2 bg-pink-600 flex-1 flex md:flex-row md:justify-between justify-start flex-col w-full'>
+        <div className='flex items-end'>
           <Link to='/'>
-            <h1 className='text-2xl text-white hover:text-pink-600'>
+            <h1 className='text-2xl text-white hover:text-slate-900'>
               PeerBooks
             </h1>
           </Link>
 
           <Link
-            className='ml-10 text-white hover:text-pink-600'
+            className='ml-10 text-white hover:text-slate-900'
             to='/book/selectfile'
           >
-            + import new book
+            import new book
           </Link>
+
+          <Link className='ml-10 text-white hover:text-slate-900' to='/feeds'>
+            manage collection
+          </Link>
+        </div>
+        <div>
           <Form action='/search' method='get'>
             <input type='text' name='q' placeholder='Search...' />
-            <button type='submit'>Go!</button>
+            <button
+              className='bg-slate-900 text-white border-transparent hover:text-slate-900 hover:bg-white'
+              type='submit'
+            >
+              Go!
+            </button>
           </Form>
         </div>
       </div>

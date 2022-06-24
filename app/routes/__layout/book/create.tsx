@@ -1,21 +1,8 @@
-import { ActionFunction, json, LoaderFunction, redirect } from '@remix-run/node'
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  useLocation,
-} from '@remix-run/react'
+import { ActionFunction, LoaderFunction, redirect } from '@remix-run/node'
 
-import {
-  parseArrayField,
-  validateFileId,
-  validateISBN,
-  validateStringField,
-} from '~/lib/utils'
-import fetchOpenLibraryData from '../../../lib/openLibrary'
-import { createBookRecord, openCollection } from '../../../sonar.server'
+import { parseArrayField, validateStringField } from '~/lib/utils'
 import { schema } from '~/schema'
-import { SiJameson } from 'react-icons/si'
+import { createBookRecord } from '../../../sonar.server'
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData()
