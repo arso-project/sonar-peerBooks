@@ -11,8 +11,8 @@ interface ImportMenuProps {
 export function ImportMenu({ step }: ImportMenuProps) {
   const bgOne = step == Steps.One && 'bg-pink-600'
   const bgTwo = step == Steps.Two && 'bg-pink-600'
-  const bgThree =
-    step == Steps.Three && 'bg-pink-600'.log(step, bgOne, bgTwo, bgThree)
+  const bgThree = step == Steps.Three && 'bg-pink-600'
+
   return (
     <div className='bg-gray-200 text-white flex'>
       <div className={'p-4 text-center w-full ' + bgOne}>
